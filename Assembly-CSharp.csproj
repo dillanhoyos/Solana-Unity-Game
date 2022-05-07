@@ -40,14 +40,17 @@
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/StandaloneFileBrowser/StandaloneFileBrowserWindows.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/StandaloneFileBrowser/IStandaloneFileBrowser.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/data/MnemonicsModel.cs" />
+     <Compile Include="Assets/Scripts/CLZF2.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/simple_screen_manager/utility/SimpleScreen.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/screens/WalletScreen.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/screens/GenerateAccountScreen.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/screens/ReGenerateAccountScreen.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/screens/ReceiveScreen.cs" />
      <Compile Include="Assets/Scripts/PhotoButtonLogic.cs" />
+     <Compile Include="Assets/Scripts/ButtonManager.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/StandaloneFileBrowser/StandaloneFileBrowserEditor.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/simple_screen_manager/interfaces/ISimpleScreen.cs" />
+     <Compile Include="Assets/Scripts/BackgroundManager.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/screens/TransferScreen.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/SimpleWallet.cs" />
      <Compile Include="Assets/Scripts/WebAPIHandler.cs" />
@@ -60,7 +63,6 @@
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/StandaloneFileBrowser/StandaloneFileBrowserMac.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/simple_screen_manager/utility/TokenItem.cs" />
      <Compile Include="Assets/Samples/Solana Wallet/1.0.0/Simple Wallet/Solana Wallet/1.0.0/Simple Wallet/script/example/simple_screen_manager/utility/SimpleScreenManager.cs" />
-     <Compile Include="Assets/Scripts/CLZF2.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />
