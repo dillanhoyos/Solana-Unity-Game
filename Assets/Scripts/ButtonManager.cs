@@ -29,7 +29,7 @@ public class ButtonManager : MonoBehaviour
 
     void Start()
     {
-        ShowHomeView();
+        //ShowHomeView();
     }
 
     public void TakePicture( int maxSize )
