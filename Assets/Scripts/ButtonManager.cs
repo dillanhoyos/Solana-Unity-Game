@@ -82,10 +82,12 @@ public class ButtonManager : MonoBehaviour
 
             // try using a rawImage
             rawImage.texture = texture;
+        
+            // get the food info via image recognition
+            PostImage();
             
     	}, maxSize );
 
-        PostImage();
         
         Background.sprite = RewardImage;
 	    Debug.Log( "Permission result: " + permission );
