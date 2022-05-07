@@ -5,6 +5,24 @@ Temp/
 Library/
 Logs/
 
+=====================================
+Visual Studio / MonoDevelop generated
+=====================================
+ExportedObj/
+obj/
+.vscode/
+*.svd
+*.userprefs
+/*.csproj
+*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+*.app
+
 ============
 OS generated
 ============

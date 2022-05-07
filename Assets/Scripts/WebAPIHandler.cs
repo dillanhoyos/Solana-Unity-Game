@@ -1,142 +1,96 @@
+using UnityEngine;
 using Newtonsoft.Json;
 using System;
+using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using WEDX.Core.ViewModels;
 
-namespace WEDX.Services
+public class WebApiHandler
 {
-    public class WebApiHandler
+    #region Variables
+    private readonly string _baseUrl;     
+    private readonly string _accessToken;
+    #endregion
+
+    public WebApiHandler(string baseURL, string accessToken)
+    {         
+        this._baseUrl = baseURL;
+        this._accessToken = accessToken;
+    }
+
+    public HttpResponseMessage Get(string url)
     {
-        #region Variables
-        private readonly string _baseUrl;     
-        private readonly string _accessToken;
-        #endregion
+        HttpResponseMessage httpResponseMessage;
 
-        public WebApiHandler()
-        {         
-            this._baseUrl = "http://localhost:60856/api/";
-            //this._baseUrl = "http://m2.cdnsolutionsgroup.com/FishEye_api/api/";
-            this._accessToken = "";
-        }
-
-        public ResponseMessage Get(string url)
+        using (var client = new HttpClient())
         {
-            ResponseMessage responseMessage = new ResponseMessage();
+            client.Timeout = TimeSpan.FromMinutes(30);
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
 
-            using (var client = new HttpClient())
-            {
-                client.Timeout = TimeSpan.FromMinutes(30);
-                client.BaseAddress = new Uri(_baseUrl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
-
-                HttpResponseMessage httpResponseMessage = client.GetAsync(url).Result;
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Success";
-                }
-                else
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Error";                  
-                }
-            }
-
-            return responseMessage;
+            httpResponseMessage = client.GetAsync(url).Result;
         }
 
-        public ResponseMessage Post(string url, object data)
+        return httpResponseMessage;
+    }
+
+    public HttpResponseMessage Post(string url, object data)
+    {
+        HttpResponseMessage httpResponseMessage;
+        using (var client = new HttpClient())
         {
-            ResponseMessage responseMessage = new ResponseMessage();
+            client.Timeout = TimeSpan.FromMinutes(30);
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
 
-            using (var client = new HttpClient())
-            {
-                client.Timeout = TimeSpan.FromMinutes(30);
-                client.BaseAddress = new Uri(_baseUrl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
+            MultipartFormDataContent multipartContent = new MultipartFormDataContent();
+            var ba = (byte[])data;
+            multipartContent.Add(new ByteArrayContent(ba, 0, ba.Length), "image", "image.jpg");
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
-                var myContent = JsonConvert.SerializeObject(data);
-                var httpContent = new StringContent(myContent, System.Text.Encoding.UTF8, "application/json");          
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-
-                HttpResponseMessage httpResponseMessage = client.PostAsync(url, httpContent).Result;
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Success";
-                }
-                else
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Error";
-                }
-            }
-            return responseMessage;
+            httpResponseMessage = client.PostAsync(url, multipartContent).Result;
         }
+        return httpResponseMessage;
+    }
 
-        public ResponseMessage Put(string url, object data)
+    public HttpResponseMessage Put(string url, object data)
+    {
+        HttpResponseMessage httpResponseMessage;
+        using (var client = new HttpClient())
         {
-            ResponseMessage responseMessage = new ResponseMessage();
+            client.Timeout = TimeSpan.FromMinutes(30);
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
 
-            using (var client = new HttpClient())
-            {
-                client.Timeout = TimeSpan.FromMinutes(30);
-                client.BaseAddress = new Uri(_baseUrl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
-
-                var myContent = JsonConvert.SerializeObject(data);
-                var httpContent = new StringContent(myContent, System.Text.Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = client.PostAsync(url, httpContent).Result;
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Success";
-                }
-                else
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Error";
-                }
-            }
-
-            return responseMessage;
+            var myContent = JsonConvert.SerializeObject(data);
+            var httpContent = new StringContent(myContent, System.Text.Encoding.UTF8, "application/json");
+            httpResponseMessage = client.PostAsync(url, httpContent).Result;
         }
+        return httpResponseMessage;
+    }
 
-        public ResponseMessage Delete(string url)
+    public HttpResponseMessage Delete(string url)
+    {
+        HttpResponseMessage httpResponseMessage;
+        using (var client = new HttpClient())
         {
-            ResponseMessage responseMessage = new ResponseMessage();
-
-            using (var client = new HttpClient())
-            {
-                client.Timeout = TimeSpan.FromMinutes(30);
-                client.BaseAddress = new Uri(_baseUrl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
-
-                HttpResponseMessage httpResponseMessage = client.DeleteAsync(url).Result;
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Success";
-                }
-                else
-                {
-                    responseMessage.Content = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                    responseMessage.Status = "Error";
-                }
-            }
-
-            return responseMessage;
+            client.Timeout = TimeSpan.FromMinutes(30);
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _accessToken);
+            httpResponseMessage = client.DeleteAsync(url).Result;
         }
+
+        return httpResponseMessage;
     }
 }
