@@ -14,11 +14,14 @@ public enum AppState { Home, Reward };
 
 public class ButtonManager : MonoBehaviour
 {
+    public int count = 0;
+    
     // background images
     public Image Background;
 
     public Sprite HomeImage;
-    public Sprite RewardImage;
+    public Sprite RewardImageBad;
+    public Sprite RewardImageGood;
 
     // photo will be rendered here
     public RawImage rawImage;
@@ -26,11 +29,6 @@ public class ButtonManager : MonoBehaviour
     //GameObject quad;
     Texture2D texture;
     byte[] byteArray;
-
-    void Start()
-    {
-        //ShowHomeView();
-    }
 
     public void TakePicture( int maxSize )
     {
@@ -89,7 +87,6 @@ public class ButtonManager : MonoBehaviour
     	}, maxSize );
 
         
-        Background.sprite = RewardImage;
 	    Debug.Log( "Permission result: " + permission );
     }
 
@@ -98,7 +95,9 @@ public class ButtonManager : MonoBehaviour
     {
         // our admin token (temp; tied to Arun's free account at logmeal.es)
         var baseUrl = "https://api.logmeal.es";
-        var appToken = "bdaf59031c9b25a32baa11e7d119870f300d851f";
+        
+        //var appToken = "bdaf59031c9b25a32baa11e7d119870f300d851f"; // Arun's account
+        var appToken = "843fa5dd52d72b3fed8e3c2236c8f232ac1ce881"; // Dillan's account
         WebApiHandler webHandler = new WebApiHandler(baseUrl, appToken);
         HttpResponseMessage webResponse = webHandler.Get("/v2/users/APIUsers");
         if(webResponse.IsSuccessStatusCode) {
@@ -121,31 +120,60 @@ public class ButtonManager : MonoBehaviour
 
         // user token (hardcoded for now; could be fetched from 'GetUsers')
         var baseUrl = "https://api.logmeal.es";
-        var userToken = "6a080a24590aa86bbbcfac6efd04b43d8d446e0c";
+
+        //var userToken = "6a080a24590aa86bbbcfac6efd04b43d8d446e0c"; // Arun's account / Arun's token
+        var userToken = "aa9298f9f55f66d82619641c61102705c787da72"; // Dillan's account / Dillan's token
+
         WebApiHandler webHandler = new WebApiHandler(baseUrl, userToken);
         
-        HttpResponseMessage webResponse = webHandler.Post("/v2/image/recognition/type/v1.0?language=eng", byteArray);
+        //HttpResponseMessage webResponse = webHandler.Post("/v2/image/recognition/type/v1.0?language=eng", byteArray);
+        HttpResponseMessage webResponse = webHandler.Post("/v2/image/recognition/complete/v1.0?skip_types=[2,3,4,5]&language=eng", byteArray);
+
+        string foodDetails = "";
         if(webResponse.IsSuccessStatusCode) {
-            Debug.Log($"Food found! {webResponse.Content.ReadAsStringAsync().Result}");      
-            ShowRewardView();
+            foodDetails = webResponse.Content.ReadAsStringAsync().Result;
+            Debug.Log($"Food found! {foodDetails}");      
         }
         else {
             Debug.Log($"Http request unsuccessful: {webResponse.Content.ReadAsStringAsync().Result}");            
         }
+                
+        ShowRewardView(foodDetails);
     }
 
     void ShowHomeView()
     {
         Debug.Log("Showing home view");
         Background.sprite = HomeImage;
-        //rawImage.enabled = false;
+        rawImage.enabled = false;
     }
 
-    void ShowRewardView()
+    void ShowRewardView(string foodDetails)
     {
-        Debug.Log("Showing reward view");
-        Background.sprite = RewardImage;
-        //rawImage.enabled = true;
+        string s = "";
+        if(foodDetails.Contains("banana")) // broken :( not enough time to change APIs need to hard code the result screen
+            s = "(has banana!)";
+
+        Debug.Log("Showing reward view " + s);
+        Background.sprite = RewardImageBad;
+        rawImage.enabled = true;
+
+        count++; // 1, 2, 3 etc.
+
+        Debug.Log($"count = {count}");        
+        // every 3rd try, show the good result (and transfer tokens)
+        if(count % 3 == 0)
+        {
+            Background.sprite = RewardImageGood;
+            SendRewards();
+        }
+
     }
+
+    void SendRewards()
+    {
+
+    }
+
 
 }
