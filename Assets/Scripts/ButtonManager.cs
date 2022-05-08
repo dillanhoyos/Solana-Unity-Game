@@ -20,6 +20,7 @@ public class ButtonManager : MonoBehaviour
     public Image Background;
 
     public Sprite HomeImage;
+    public Sprite HomeImageFinal;
     public Sprite RewardImageBad;
     public Sprite RewardImageGood;
 
@@ -32,6 +33,15 @@ public class ButtonManager : MonoBehaviour
 
     public void TakePicture( int maxSize )
     {
+        count++;
+        Debug.Log($"Take picture: count = {count}");
+        if(count == 4)
+        {
+            Background.sprite = HomeImageFinal;
+            rawImage.enabled = false;
+            return;
+        }
+
         NativeCamera.Permission permission = NativeCamera.TakePicture( ( path ) =>
         {
             Debug.Log( "Image path: " + path );
@@ -81,7 +91,7 @@ public class ButtonManager : MonoBehaviour
             // try using a rawImage
             rawImage.texture = texture;
         
-            // get the food info via image recognition
+            // get the food info via image recognition via MealLog API
             PostImage();
             
     	}, maxSize );
@@ -141,13 +151,6 @@ public class ButtonManager : MonoBehaviour
         ShowRewardView(foodDetails);
     }
 
-    void ShowHomeView()
-    {
-        Debug.Log("Showing home view");
-        Background.sprite = HomeImage;
-        rawImage.enabled = false;
-    }
-
     void ShowRewardView(string foodDetails)
     {
         string s = "";
@@ -158,22 +161,12 @@ public class ButtonManager : MonoBehaviour
         Background.sprite = RewardImageBad;
         rawImage.enabled = true;
 
-        count++; // 1, 2, 3 etc.
-
         Debug.Log($"count = {count}");        
+
         // every 3rd try, show the good result (and transfer tokens)
         if(count % 3 == 0)
         {
             Background.sprite = RewardImageGood;
-            SendRewards();
         }
-
     }
-
-    void SendRewards()
-    {
-
-    }
-
-
 }
